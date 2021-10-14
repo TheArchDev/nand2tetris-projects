@@ -13,9 +13,15 @@ CHIP Xor {
     OUT out;
 
     PARTS:
-    Not(in=b, out=Notb);
-    And(a=a, b=Notb, out=aAndNotb);
-    Not(in=a, out=Nota);
-    And(a=Nota, b=b, out=NotaAndb);
-    Or(a=aAndNotb, b=NotaAndb, out=out);
+    // original solution; consider its logic to be easy to follow
+    // Not(in=b, out=Notb);
+    // And(a=a, b=Notb, out=aAndNotb);
+    // Not(in=a, out=Nota);
+    // And(a=Nota, b=b, out=NotaAndb);
+    // Or(a=aAndNotb, b=NotaAndb, out=out);
+
+    // simpler solution; including in terms of number of underlying Nand gates
+    Or(a=a, b=b, out=aOrb);
+    Nand(a=a, b=b, out=aNandb);
+    And(a=aOrb, b=aNandb, out=out);
 }
