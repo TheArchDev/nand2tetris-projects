@@ -21,7 +21,13 @@ CHIP Xor {
     // Or(a=aAndNotb, b=NotaAndb, out=out);
 
     // simpler solution; including in terms of number of underlying Nand gates
-    Or(a=a, b=b, out=aOrb);
+    // Or(a=a, b=b, out=aOrb);
+    // Nand(a=a, b=b, out=aNandb);
+    // And(a=aOrb, b=aNandb, out=out);
+
+    // fewest number of underlying Nand gates - heard about this version, did not deduce
     Nand(a=a, b=b, out=aNandb);
-    And(a=aOrb, b=aNandb, out=out);
+    Nand(a=aNandb, b=a, out=aNandb-Nand-a);
+    Nand(a=aNandb, b=b, out=aNandb-Nand-b);
+    Nand(a=aNandb-Nand-a, b=aNandb-Nand-b, out=out);
 }
