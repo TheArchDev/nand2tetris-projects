@@ -15,19 +15,19 @@ CHIP Xor {
     PARTS:
     // original solution; consider its logic to be easy to follow
     // Not(in=b, out=Notb);
-    // And(a=a, b=Notb, out=aAndNotb);
+    // And(a=a, b=Notb, out=a-And-Notb);
     // Not(in=a, out=Nota);
-    // And(a=Nota, b=b, out=NotaAndb);
-    // Or(a=aAndNotb, b=NotaAndb, out=out);
+    // And(a=Nota, b=b, out=Nota-And-b);
+    // Or(a=a-And-Notb, b=Nota-And-b, out=out);
 
     // simpler solution; including in terms of number of underlying Nand gates
-    // Or(a=a, b=b, out=aOrb);
-    // Nand(a=a, b=b, out=aNandb);
-    // And(a=aOrb, b=aNandb, out=out);
+    Or(a=a, b=b, out=aOrb);
+    Nand(a=a, b=b, out=aNandb);
+    And(a=aOrb, b=aNandb, out=out);
 
     // fewest number of underlying Nand gates - heard about this version, did not deduce
-    Nand(a=a, b=b, out=aNandb);
-    Nand(a=aNandb, b=a, out=aNandb-Nand-a);
-    Nand(a=aNandb, b=b, out=aNandb-Nand-b);
-    Nand(a=aNandb-Nand-a, b=aNandb-Nand-b, out=out);
+    // Nand(a=a, b=b, out=aNandb);
+    // Nand(a=aNandb, b=a, out=aNandb-Nand-a);
+    // Nand(a=aNandb, b=b, out=aNandb-Nand-b);
+    // Nand(a=aNandb-Nand-a, b=aNandb-Nand-b, out=out);
 }
