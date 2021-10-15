@@ -13,6 +13,7 @@ CHIP Or16 {
     OUT out[16];
 
     PARTS:
+    // original solution
     // Or(a=a[0], b=b[0], out=out[0]);
     // Or(a=a[1], b=b[1], out=out[1]);
     // Or(a=a[2], b=b[2], out=out[2]);
@@ -30,6 +31,7 @@ CHIP Or16 {
     // Or(a=a[14], b=b[14], out=out[14]);
     // Or(a=a[15], b=b[15], out=out[15]);
 
+    // suggested solution using helper chip
     Not16(in=a, out=Nota);
     Not16(in=b, out=Notb);
     Nand16(a=Nota, b=Notb, out=out);
