@@ -14,8 +14,15 @@ CHIP Mux {
     OUT out;
 
     PARTS:
+    // original solution; consider its logic to be easy to follow
     Not(in=sel, out=Notsel);
     And(a=a, b=Notsel, out=a-And-Notsel);
     And(a=b, b=sel, out=bAndsel);
     Or(a=a-And-Notsel, b=bAndsel, out=out);
+
+    // fewer number of Nand gates; heard about this, then deduced
+    // Not(in=sel, out=Notsel);
+    // Nand(a=a, b=Notsel, out=a-Nand-Notsel);
+    // Nand(a=b, b=sel, out=bNandsel);
+    // Nand(a=a-Nand-Notsel, b=bNandsel, out=out);
 }
