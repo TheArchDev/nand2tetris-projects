@@ -42,18 +42,28 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
+    // zx, nx
     Mux16(a=x, b=false, sel=zx, out=tempx);
     Not16(in=tempx, out=nottempx);
     Mux16(a=tempx, b=nottempx, sel=nx, out=tempx2);
 
+    // zy, ny
     Mux16(a=y, b=false, sel=zy, out=tempy);
     Not16(in=tempy, out=nottempy);
     Mux16(a=tempy, b=nottempy, sel=ny, out=tempy2);
 
+    // f
     And16(a=tempx2, b=tempy2, out=xAndy);
     Add16(a=tempx2, b=tempy2, out=xAddy);
     Mux16(a=xAndy, b=xAddy, sel=f, out=tempf);
 
+    // no
     Not16(in=tempf, out=nottempf);
-    Mux16(a=tempf, b=nottempf, sel=no, out=out);
+    Mux16(a=tempf, b=nottempf, sel=no, out=output);
+
+    // final out
+    Pipe16(in=output, out=out);
+
+    // ng
+    MSBit(in=output, out=ng);
 }
