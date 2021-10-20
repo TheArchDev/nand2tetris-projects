@@ -66,4 +66,8 @@ CHIP ALU {
 
     // ng
     MSBit(in=output, out=ng);
+
+    // zr
+    Or16Way(in=output, out=tempzr);
+    Not(in=tempzr, out=zr);
 }
