@@ -57,15 +57,9 @@ CHIP ALU {
     Add16(a=tempx2, b=tempy2, out=xAddy);
     Mux16(a=xAndy, b=xAddy, sel=f, out=tempf);
 
-    // no
+    // no; out; ng
     Not16(in=tempf, out=nottempf);
-    Mux16(a=tempf, b=nottempf, sel=no, out=output);
-
-    // final out
-    Pipe16(in=output, out=out);
-
-    // ng
-    MSBit(in=output, out=ng);
+    Mux16(a=tempf, b=nottempf, sel=no, out=output, out=out, out[15]=ng);
 
     // zr
     Or16Way(in=output, out=tempzr);

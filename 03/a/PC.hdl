@@ -16,12 +16,11 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    Inc16(in=output, out=incremented);
-    Mux16(a=output, b=incremented, sel=inc, out=processed1);
+    Inc16(in=feedback, out=incremented);
+    Mux16(a=feedback, b=incremented, sel=inc, out=processed1);
     Mux16(a=processed1, b=in, sel=load, out=processed2);
     Mux16(a=processed2, b=false, sel=reset, out=processed3);
-    DFF16(in=processed3, out=output);
+    DFF16(in=processed3, out=feedback, out=out);
     // Alternative line to DFF16 chip
-    // Register(in=processed3, load=true, out=output);
-    And16(a=output, b=output, out=out);
+    // Register(in=processed3, load=true, out=feedback, out=out);
 }
