@@ -11,21 +11,6 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-// LOOP PSEUDOCODE
-// initially paint screen white
-// while loop
-//		check keyboard input
-// 		if keyboard press
-//			PAINT screen black
-// 		else
-//			PAINT screen white
-//
-// PAINT PSEUDOCODE
-// for pixel in range(SCREEN)
-//		set all bits/pixels to 1/black
-
-// keyboard = 24576
-
 // Put your code here.
 
 	// Get starting address of screen, 16384

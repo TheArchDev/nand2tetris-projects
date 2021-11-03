@@ -9,16 +9,6 @@
 // This program only needs to handle arguments that satisfy
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
-// PSEUDOCODE
-// store R0 in variable x
-// store R1 in variable y
-// sum variable; where sum = 0
-// clear R2 of any previous data
-// for (i=0; i<y; i++)
-//		sum = sum + x
-// set R2 equal to sum variable
-
-
 // Put your code here.
 	// x = R0
 	@R0
