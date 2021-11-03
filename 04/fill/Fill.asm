@@ -13,21 +13,26 @@
 
 // Put your code here.
 
-	// Store length of screen memory, 8192
+	// Store length of screen memory, 8192, in a variable
 	@8192
 	D=A
 	@screenlength
 	M=D
 
-(WHILE)
-	// initial for loop counter
+(SCANINPUT)
+	// initialise counter used in for loop to paint all screen registers
 	@i
 	M=0
 
+	// check keyboard input
 	@KBD
 	D=M
+
+	// paint screen black if non-zero input
 	@PAINTBLACK
 	D;JNE
+
+	// otherwise paint screen white
 	@PAINTWHITE
 	0;JMP
 
@@ -37,7 +42,7 @@
 	D=M
 	@screenlength
 	D=D-M
-	@WHILE
+	@SCANINPUT
 	D;JEQ
 
 	// update to next part of screen memory
@@ -62,7 +67,7 @@
 	D=M
 	@screenlength
 	D=D-M
-	@WHILE
+	@SCANINPUT
 	D;JEQ
 
 	// update to next part of screen memory
