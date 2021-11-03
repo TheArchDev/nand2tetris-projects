@@ -19,49 +19,47 @@
 	@screenlength
 	M=D
 
+	// Store paint colour (black or white) for 16-bit output registers
+	D=0
+	@paintcolour
+
+
 (SCANINPUT)
 	// initialise counter used in for loop to paint all screen registers
 	@i
 	M=0
+
+	// initialise address for screen register
+	@SCREEN
+	D=A
+	@address
+	M=D
 
 	// check keyboard input
 	@KBD
 	D=M
 
 	// paint screen black if non-zero input
-	@PAINTBLACK
+	@SETBLACK
 	D;JNE
 
 	// otherwise paint screen white
-	@PAINTWHITE
+	@SETWHITE
 	0;JMP
 
-(PAINTWHITE)
-	// check if end of for loop, ie if have painted all screen registers
-	@i
-	D=M
-	@screenlength
-	D=D-M
-	@SCANINPUT
-	D;JEQ
-
-	// update to next register in screen memory
-	@i
-	D=M
-	@SCREEN
-	A=D+A
-	// set all pixels in this register to white
+(SETWHITE)
+	@paintcolour
 	M=0
-
-	// increment for loop counter
-	@i
-	M=M+1
-
-	// Continue loop
-	@PAINTWHITE
+	@PAINT
 	0;JMP
 
-(PAINTBLACK)
+(SETBLACK)
+	@paintcolour
+	M=-1
+	@PAINT
+	0;JMP
+
+(PAINT)
 	// check if end of for loop, ie if have painted all screen registers
 	@i
 	D=M
@@ -75,13 +73,22 @@
 	D=M
 	@SCREEN
 	A=D+A
-	// set all pixels in this register to black
-	M=-1
+
+	// get paint colour
+	@paintcolour
+	D=M
+	@address
+	A=M
+	// set all pixels in this register to white
+	M=D
 
 	// increment for loop counter
 	@i
 	M=M+1
+	// increment address as well
+	@address
+	M=M+1
 
 	// Continue loop
-	@PAINTBLACK
+	@PAINTWHITE
 	0;JMP
