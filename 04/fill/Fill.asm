@@ -13,12 +13,6 @@
 
 // Put your code here.
 
-	// store length of screen memory in a variable
-	@8192
-	D=A
-	@screenlength
-	M=D
-
 (SCANINPUT)
 	// initialise counter used in for loop to paint all screen registers
 	// TODO can remove??
@@ -60,35 +54,31 @@
 	0;JMP
 
 (PAINT)
-	// check if end of for loop, ie if have painted all screen registers
-	@i
+	// check if at end of for loop; ie if at final screen register
+	@screenregister
 	D=M
-	@screenlength
-	D=D-M
+	// number of registers in screen output
+	@8192
+	D=D-A
+	// starting location of screen output
+	@SCREEN
+	D=D-A
 	@SCANINPUT
 	D;JEQ
-
-	// update to next register in screen memory
-	@i
-	D=M
-	@SCREEN
-	A=D+A
 
 	// get paint colour
 	@paintcolour
 	D=M
+
+	// set all pixels in given screen register to the colour
 	@screenregister
 	A=M
-	// set all pixels in this register to the colour
 	M=D
 
-	// increment for loop counter
-	@i
-	M=M+1
-	// increment address as well
+	// increment to next screen address
 	@screenregister
 	M=M+1
 
-	// Continue loop
+	// repeat paint loop
 	@PAINT
 	0;JMP
