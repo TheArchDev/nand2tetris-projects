@@ -19,19 +19,12 @@
 	@screenlength
 	M=D
 
-	// Store address of keyboard
-	@KBD
-	D=A
-	@keyboardaddress
-	M=D
-
 (WHILE)
 	// initial for loop counter
 	@i
 	M=0
 
-	@keyboardaddress
-	A=M
+	@KBD
 	D=M
 	@PAINTBLACK
 	D;JNE
