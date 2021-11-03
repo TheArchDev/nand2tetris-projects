@@ -13,12 +13,6 @@
 
 // Put your code here.
 
-	// Get starting address of screen, 16384
-	@SCREEN
-	D=A
-	@screenaddress
-	M=D
-
 	// Store length of screen memory, 8192
 	@8192
 	D=A
@@ -56,8 +50,8 @@
 	// update to next part of screen memory
 	@i
 	D=M
-	@screenaddress
-	A=D+M
+	@SCREEN
+	A=D+A
 	// set all pixels in this register to black
 	M=0
 
@@ -81,8 +75,8 @@
 	// update to next part of screen memory
 	@i
 	D=M
-	@screenaddress
-	A=D+M
+	@SCREEN
+	A=D+A
 	// set all pixels in this register to black
 	M=-1
 
