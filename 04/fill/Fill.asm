@@ -19,11 +19,6 @@
 	@screenlength
 	M=D
 
-	// Store paint colour (black or white) for 16-bit output registers
-	D=0
-	@paintcolour
-
-
 (SCANINPUT)
 	// initialise counter used in for loop to paint all screen registers
 	@i
@@ -79,7 +74,7 @@
 	D=M
 	@address
 	A=M
-	// set all pixels in this register to white
+	// set all pixels in this register to the colour
 	M=D
 
 	// increment for loop counter
@@ -90,5 +85,5 @@
 	M=M+1
 
 	// Continue loop
-	@PAINTWHITE
+	@PAINT
 	0;JMP
