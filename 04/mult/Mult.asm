@@ -13,12 +13,13 @@
 // store R0 in variable x
 // store R1 in variable y
 // sum variable; where sum = 0
+// clear R2 of any previous data
 // for (i=0; i<y; i++)
 //		sum = sum + x
+// set R2 equal to sum variable
 
 
 // Put your code here.
-
 	// x = R0
 	@R0
 	D=M
@@ -34,6 +35,8 @@
 	// sum = 0
 	@sum
 	M=0
+
+	// clear final output field, R2
 	@R2
 	M=0
 
@@ -51,13 +54,10 @@
 	D;JEQ
 
 	// sum = sum + x
-	// can this be simplified?
-	@sum
-	D=M
 	@x
-	D=D+M
+	D=M
 	@sum
-	M=D
+	M=M+D
 
 	// i++
 	@i
@@ -68,7 +68,7 @@
 	0;JMP
 
 (SET)
-	// Set R2 equal to sum variable
+	// Set final output, R2, equal to sum variable
 	@sum
 	D=M
 	@R2
