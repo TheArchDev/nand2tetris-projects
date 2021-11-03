@@ -37,7 +37,7 @@
 	0;JMP
 
 (PAINTWHITE)
-	// for loop END logic check
+	// check if end of for loop, ie if have painted all screen registers
 	@i
 	D=M
 	@screenlength
@@ -45,12 +45,12 @@
 	@SCANINPUT
 	D;JEQ
 
-	// update to next part of screen memory
+	// update to next register in screen memory
 	@i
 	D=M
 	@SCREEN
 	A=D+A
-	// set all pixels in this register to black
+	// set all pixels in this register to white
 	M=0
 
 	// increment for loop counter
@@ -62,7 +62,7 @@
 	0;JMP
 
 (PAINTBLACK)
-	// for loop END logic check
+	// check if end of for loop, ie if have painted all screen registers
 	@i
 	D=M
 	@screenlength
@@ -70,7 +70,7 @@
 	@SCANINPUT
 	D;JEQ
 
-	// update to next part of screen memory
+	// update to next register in screen memory
 	@i
 	D=M
 	@SCREEN
