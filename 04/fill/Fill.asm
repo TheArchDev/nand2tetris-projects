@@ -13,7 +13,7 @@
 
 // Put your code here.
 
-	// Store length of screen memory, 8192, in a variable
+	// store length of screen memory in a variable
 	@8192
 	D=A
 	@screenlength
@@ -21,13 +21,14 @@
 
 (SCANINPUT)
 	// initialise counter used in for loop to paint all screen registers
+	// TODO can remove??
 	@i
 	M=0
 
-	// initialise address for screen register
+	// initialise screen register variable with start of screen memory
 	@SCREEN
 	D=A
-	@address
+	@screenregister
 	M=D
 
 	// check keyboard input
@@ -35,20 +36,24 @@
 	D=M
 
 	// paint screen black if non-zero input
-	@SETBLACK
+	@PAINTBLACK
 	D;JNE
 
 	// otherwise paint screen white
-	@SETWHITE
+	@PAINTWHITE
+
+	// always repeat loop to keep scanning keyboard input
 	0;JMP
 
-(SETWHITE)
+(PAINTWHITE)
+	// input to set all pixels in a 16-bit screen register to 0
 	@paintcolour
 	M=0
 	@PAINT
 	0;JMP
 
-(SETBLACK)
+(PAINTBLACK)
+	// input to set all pixels in a 16-bit screen register to 1
 	@paintcolour
 	M=-1
 	@PAINT
@@ -72,7 +77,7 @@
 	// get paint colour
 	@paintcolour
 	D=M
-	@address
+	@screenregister
 	A=M
 	// set all pixels in this register to the colour
 	M=D
@@ -81,7 +86,7 @@
 	@i
 	M=M+1
 	// increment address as well
-	@address
+	@screenregister
 	M=M+1
 
 	// Continue loop
