@@ -14,16 +14,18 @@
 // Put your code here.
 
 (SCANINPUT)
-	// initialise counter used in for loop to paint all screen registers
-	// TODO can remove??
-	@i
-	M=0
-
 	// initialise screen register variable with start of screen memory
 	@SCREEN
 	D=A
 	@screenregister
 	M=D
+
+	// variable to store location of final screen register
+	@8192
+	D=D+A
+	@finalregister
+	M=D
+
 
 	// check keyboard input
 	@KBD
@@ -57,12 +59,8 @@
 	// check if at end of for loop; ie if at final screen register
 	@screenregister
 	D=M
-	// number of registers in screen output
-	@8192
-	D=D-A
-	// starting location of screen output
-	@SCREEN
-	D=D-A
+	@finalregister
+	D=D-M
 	@SCANINPUT
 	D;JEQ
 
