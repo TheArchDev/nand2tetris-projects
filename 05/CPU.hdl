@@ -88,7 +88,15 @@ CHIP CPU {
     // if j2=1 only, and zr=1 (ng doesn't matter, as can't both be 1), then load
     And(a=instruction[1], b=output-alu-zr, out=pctemp2);
 
-    Or(a=pctemp1, b=pctemp2, out=load-temp);
+    // JGT logic time 40 step
+    // if j3=1 only, and zr=ng=0, then load
+    Not(in=output-alu-zr, out=tempzr);
+    Not(in=output-alu-ng, out=tempng);
+    And(a=instruction[0], b=tempzr, out=tempjgt);
+    And(a=tempjgt, b=tempng, out=pctemp3);
+
+    Or(a=pctemp1, b=pctemp2, out=pcor1);
+    Or(a=pcor1, b=pctemp3, out=load-temp);
     // only do if C-instruction
     And(a=load-temp, b=instruction[15], out=load-pc);
     PC(in=output-a-register, load=load-pc, inc=true, reset=reset, out[0..14]=pc);
