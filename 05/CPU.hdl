@@ -39,9 +39,20 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
+    // If A-instruction (ie begins with 0), pass onto A-register
+    // If C-instruction (ie begins with 1), instead feed back in ALU output
+    // pretty sure this sel approach is correct, based on video
     Mux16(a=instruction, b=output-alu, sel=instruction[15], out=input-a-register);
 
-    ARegister(in=input-a-register, load=instruction[5], out=output-a-register, out[0..14]=addressM);
+    // Load into A-register if
+    // A-instruction
+    // OR
+    // C-instruction (ie instruction[15]=1) AND d1(ie instruction[5])=1
+    Not(in=instruction[15], out=tempnot);
+    And(a=instruction[15], b=instruction[5], out=tempand);
+    Or(a=tempnot, b=tempand, out=load-a-register);
+
+    ARegister(in=input-a-register, load=load-a-register, out=output-a-register, out[0..14]=addressM);
 
     Mux16(a=output-a-register, b=inM, sel=instruction[12], out=input-alu-y);
 
@@ -52,7 +63,6 @@ CHIP CPU {
     ALU(
         x=input-alu-x,
         y=input-alu-y,
-        // y=output-a-register,
         zx=instruction[11],
         nx=instruction[10],
         zy=instruction[9],
