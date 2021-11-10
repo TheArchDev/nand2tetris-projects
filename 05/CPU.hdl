@@ -39,5 +39,51 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    Mux16(a=instruction, b=output-alu, sel=instruction[15], out=input-a-register);
+
+    ARegister(in=input-a-register, load=instruction[5], out=output-a-register, out[0..14]=addressM);
+
+    Mux16(a=output-a-register, b=inM, sel=instruction[12], out=input-alu-y);
+
+    DRegister(in=output-alu, load=instruction[4], out=input-alu-x);
+
+    Mux(a=false, b=instruction[3], sel=instruction[15], out=writeM);
+
+    ALU(
+        x=input-alu-x,
+        y=input-alu-y,
+        // y=output-a-register,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[9],
+        ny=instruction[8],
+        f=instruction[7],
+        no=instruction[6],
+        zr=output-alu-zr,
+        ng=output-alu-ng,
+        out=output-alu,
+        out=outM
+    );
+    // need to use zr and ng results!
+    // attempted calculations for load and inc
+    // j1 = instruction[2]
+    // j2 = instruction[1]
+    // j3 = instruction[0]
+    PC(in=output-a-register, load=false, inc=true, reset=reset, out[0..14]=pc);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
