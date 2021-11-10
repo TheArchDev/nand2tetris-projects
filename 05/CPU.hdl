@@ -79,7 +79,13 @@ CHIP CPU {
     // j1 = instruction[2]
     // j2 = instruction[1]
     // j3 = instruction[0]
-    PC(in=output-a-register, load=false, inc=true, reset=reset, out[0..14]=pc);
+
+    // JLT logic for time 12 step
+    // if j1=1 only, and ng=1 (zr value doesn't matter), then load
+    And(a=instruction[2], b=output-alu-ng, out=pctemp1);
+    // only do if C-instruction
+    And(a=pctemp1, b=instruction[15], out=load-pc);
+    PC(in=output-a-register, load=load-pc, inc=true, reset=reset, out[0..14]=pc);
 
 
 
