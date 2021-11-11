@@ -85,12 +85,11 @@ CHIP CPU {
     // instruction[1] is j2 from jump bits
     And(a=instruction[1], b=output-alu-zr, out=pc-j2);
 
-    // if j3 bit is 1, jump in cases where comp is greater than to zero: JGT, JGE, JNE, JMP
+    // if j3 bit is 1, jump in cases where comp is greater than zero: JGT, JGE, JNE, JMP
     // instruction[0] is j3 from jump bits
-    Not(in=output-alu-zr, out=not-zr);
-    Not(in=output-alu-ng, out=not-ng);
-    And(a=not-zr, b=not-ng, out=temp-j3);
-    And(a=instruction[0], b=temp-j3, out=pc-j3);
+    Or(a=output-alu-zr, b=output-alu-ng, out=not-positive);
+    Not(in=not-positive, out=positive);
+    And(a=instruction[0], b=positive, out=pc-j3);
 
     Or(a=pc-j1, b=pc-j2, out=temp-or);
     Or(a=temp-or, b=pc-j3, out=temp-load-pc);
