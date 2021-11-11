@@ -39,27 +39,27 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // If A-instruction (ie begins with 0), pass onto A-register
-    // If C-instruction (ie begins with 1), instead feed back in ALU output
-    // pretty sure this sel approach is correct, based on video
+    // instruction[15] is op code; A-instruction (0) vs C-instruction (1)
     Mux16(a=instruction, b=output-alu, sel=instruction[15], out=input-a-register);
 
-    // Load into A-register if
-    // A-instruction
-    // OR
-    // C-instruction (ie instruction[15]=1) AND d1(ie instruction[5])=1
-    Not(in=instruction[15], out=tempnot);
-    And(a=instruction[15], b=instruction[5], out=tempand);
-    Or(a=tempnot, b=tempand, out=load-a-register);
+    // write to A-register if i) A-instruction ii) C-instruction with "d1" true
+    Not(in=instruction[15], out=a-instruction);
+    // instruction[5] is "d1" from dest bits
+    And(a=instruction[15], b=instruction[5], out=c-instruction-with-d1);
+    Or(a=a-instruction, b=c-instruction-with-d1, out=load-a-register);
 
     ARegister(in=input-a-register, load=load-a-register, out=output-a-register, out[0..14]=addressM);
 
+    // instruction[12] is "a" from comp bits
     Mux16(a=output-a-register, b=inM, sel=instruction[12], out=input-alu-y);
 
-    // Load into D-register if C-instruction only
+    // write to D-register if C-instruction with "d2" true
+    // instruction[4] is "d2" from dest bits
     And(a=instruction[15], b=instruction[4], out=load-d-register);
     DRegister(in=output-alu, load=load-d-register, out=input-alu-x);
 
+    // write to M-register if C-instruction with "d3" true
+    // instruction[3] is "d3" from dest bits
     Mux(a=false, b=instruction[3], sel=instruction[15], out=writeM);
 
     ALU(
@@ -76,8 +76,7 @@ CHIP CPU {
         out=output-alu,
         out=outM
     );
-    // need to use zr and ng results!
-    // attempted calculations for load and inc
+
     // j1 = instruction[2]
     // j2 = instruction[1]
     // j3 = instruction[0]
