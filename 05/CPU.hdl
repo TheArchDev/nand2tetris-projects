@@ -42,24 +42,24 @@ CHIP CPU {
     // instruction[15] is op code; A-instruction (0) vs C-instruction (1)
     Mux16(a=instruction, b=output-alu, sel=instruction[15], out=input-a-register);
 
-    // write to A-register if i) A-instruction ii) C-instruction with "d1" true
+    // write to A-register if i) A-instruction ii) C-instruction with d1 true
     Not(in=instruction[15], out=a-instruction);
-    // instruction[5] is "d1" from dest bits
+    // instruction[5] is d1 from dest bits
     And(a=instruction[15], b=instruction[5], out=c-instruction-with-d1);
     Or(a=a-instruction, b=c-instruction-with-d1, out=load-a-register);
 
     ARegister(in=input-a-register, load=load-a-register, out=output-a-register, out[0..14]=addressM);
 
-    // instruction[12] is "a" from comp bits
+    // instruction[12] is a from comp bits
     Mux16(a=output-a-register, b=inM, sel=instruction[12], out=input-alu-y);
 
-    // write to D-register if C-instruction with "d2" true
-    // instruction[4] is "d2" from dest bits
+    // write to D-register if C-instruction with d2 true
+    // instruction[4] is d2 from dest bits
     And(a=instruction[15], b=instruction[4], out=load-d-register);
     DRegister(in=output-alu, load=load-d-register, out=input-alu-x);
 
-    // write to M-register if C-instruction with "d3" true
-    // instruction[3] is "d3" from dest bits
+    // write to M-register if C-instruction with d3 true
+    // instruction[3] is d3 from dest bits
     Mux(a=false, b=instruction[3], sel=instruction[15], out=writeM);
 
     ALU(
@@ -77,45 +77,24 @@ CHIP CPU {
         out=outM
     );
 
-    // j1 = instruction[2]
-    // j2 = instruction[1]
-    // j3 = instruction[0]
-
-    // JLT logic for time 12 step
-    // if j1=1, and ng=1 (zr value doesn't matter), then load
-    And(a=instruction[2], b=output-alu-ng, out=pctemp1);
+    // if j1 bit is 1, jump in cases where comp is less than zero: JLT, JNE, JLE, JMP
+    // instruction[2] is j1 from jump bits
+    And(a=instruction[2], b=output-alu-ng, out=pc-j1);
     
-    // JEQ logic for time 17 step
-    // if j2=1, and zr=1 (ng doesn't matter, as can't both be 1), then load
-    And(a=instruction[1], b=output-alu-zr, out=pctemp2);
+    // if j2 bit is 1, jump in cases where comp is equal to zero: JEQ, JGE, JLE, JMP
+    // instruction[1] is j2 from jump bits
+    And(a=instruction[1], b=output-alu-zr, out=pc-j2);
 
-    // JGT logic time 40 step
-    // if j3=1 only, and zr=ng=0, then load
-    Not(in=output-alu-zr, out=tempzr);
-    Not(in=output-alu-ng, out=tempng);
-    And(a=instruction[0], b=tempzr, out=tempjgt);
-    And(a=tempjgt, b=tempng, out=pctemp3);
+    // if j3 bit is 1, jump in cases where comp is greater than to zero: JGT, JGE, JNE, JMP
+    // instruction[0] is j3 from jump bits
+    Not(in=output-alu-zr, out=not-zr);
+    Not(in=output-alu-ng, out=not-ng);
+    And(a=not-zr, b=not-ng, out=temp-j3);
+    And(a=instruction[0], b=temp-j3, out=pc-j3);
 
-    Or(a=pctemp1, b=pctemp2, out=pcor1);
-    Or(a=pcor1, b=pctemp3, out=load-temp);
-    // only do if C-instruction
-    And(a=load-temp, b=instruction[15], out=load-pc);
-    
+    Or(a=pc-j1, b=pc-j2, out=temp-or);
+    Or(a=temp-or, b=pc-j3, out=temp-load-pc);
+    // only jump if C-instruction
+    And(a=instruction[15], b=temp-load-pc, out=load-pc);
     PC(in=output-a-register, load=load-pc, inc=true, reset=reset, out[0..14]=pc);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
